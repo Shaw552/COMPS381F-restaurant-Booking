@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Reservation System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Restaurant Reservation System</h1>
+            <a href="/reservations/list" class="btn-secondary">My Reservations</a>
+            <a href="/logout" class="btn-secondary">Logout</a>
+        </header>
+        
+        <div class="home-content">
+            <h2>Select a Branch</h2>
+            <div class="branch-selection">
+                <a href="/reservations/create?branch=Ho Man Tin Branch" class="branch-card">
+                    <h3>Ho Man Tin Branch</h3>
+                    <p>Click to make a reservation</p>
+                </a>
+                <a href="/reservations/create?branch=Mong Kok Branch" class="branch-card">
+                    <h3>Mong Kok Branch</h3>
+                    <p>Click to make a reservation</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

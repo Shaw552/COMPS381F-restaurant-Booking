@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Reservation - Restaurant Reservation System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Edit Reservation</h1>
+            <a href="/reservations/list" class="btn-secondary">Back</a>
+        </header>
+        
+        <% if (error) { %>
+            <div class="error"><%= error %></div>
+        <% } %>
+        
+        <form method="POST" action="/reservations/edit/<%= reservation._id %>" class="reservation-form">
+            <div class="form-group">
+                <label>Select Branch:</label>
+                <select name="branch" required>
+                    <option value="Ho Man Tin Branch" <%= reservation.branch === 'Ho Man Tin Branch' ? 'selected' : '' %>>Ho Man Tin Branch</option>
+                    <option value="Mong Kok Branch" <%= reservation.branch === 'Mong Kok Branch' ? 'selected' : '' %>>Mong Kok Branch</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Select Date:</label>
+                <input type="date" name="date" id="dateInput" 
+                    value="<%= new Date(reservation.date).toISOString().split('T')[0] %>" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Select Time:</label>
+                <select name="time" required>
+                    <% const times = ['11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30']; %>
+                    <% times.forEach(time => { %>
+                        <option value="<%= time %>" <%= reservation.time === time ? 'selected' : '' %>><%= time %></option>
+                    <% }); %>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Number of Adults:</label>
+                <input type="number" name="adults" id="adultsInput" min="1" value="<%= reservation.adults %>" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Number of Children:</label>
+                <input type="number" name="children" id="childrenInput" min="0" value="<%= reservation.children %>" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Total People: <span id="totalPeople"><%= reservation.adults + reservation.children %></span> / 12</label>
+                <div id="peopleError" class="error" style="display:none;">Total number of people cannot exceed 12</div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Update Reservation</button>
+                <a href="/reservations/list" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // Set min and max date for date input (December 2025 only)
+        const dateInput = document.getElementById('dateInput');
+        dateInput.min = '2025-12-01';
+        dateInput.max = '2025-12-31';
+        
+        // Validate total people
+        function updateTotalPeople() {
+            const adults = parseInt(document.getElementById('adultsInput').value) || 0;
+            const children = parseInt(document.getElementById('childrenInput').value) || 0;
+            const total = adults + children;
+            
+            document.getElementById('totalPeople').textContent = total;
+            
+            const peopleError = document.getElementById('peopleError');
+            if (total > 12) {
+                peopleError.style.display = 'block';
+                return false;
+            } else {
+                peopleError.style.display = 'none';
+                return true;
+            }
+        }
+        
+        document.getElementById('adultsInput').addEventListener('input', updateTotalPeople);
+        document.getElementById('childrenInput').addEventListener('input', updateTotalPeople);
+        
+        // Form validation
+        document.querySelector('form').addEventListener('submit', (e) => {
+            if (!updateTotalPeople()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>
+

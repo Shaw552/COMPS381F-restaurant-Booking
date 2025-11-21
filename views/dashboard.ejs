@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reservations - Restaurant Reservation System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>My Reservations</h1>
+            <a href="/logout" class="btn-secondary">Logout</a>
+        </header>
+        
+        <div class="actions">
+            <a href="/" class="btn-primary">New Reservation</a>
+        </div>
+        
+        <% if (reservations && reservations.length > 0) { %>
+            <table class="reservation-table">
+                <thead>
+                    <tr>
+                        <th>Branch</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Adults</th>
+                        <th>Children</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reservations.forEach(reservation => { %>
+                        <tr>
+                            <td><%= reservation.branch %></td>
+                            <td><%= new Date(reservation.date).toLocaleDateString('en-US') %></td>
+                            <td><%= reservation.time %></td>
+                            <td><%= reservation.adults %></td>
+                            <td><%= reservation.children %></td>
+                            <td>
+                                <a href="/reservations/edit/<%= reservation._id %>" class="btn-edit">Edit</a>
+                                <button type="button" class="btn-delete" data-reservation-id="<%= reservation._id %>" data-branch="<%= reservation.branch %>" data-date="<%= new Date(reservation.date).toLocaleDateString('en-US') %>" data-time="<%= reservation.time %>" onclick="showDeleteConfirm(this)">Cancel</button>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p class="empty-message">No reservations yet. <a href="/">Make a reservation</a></p>
+        <% } %>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>Cancel Reservation</h2>
+            <p>Are you sure you want to cancel this reservation?</p>
+            <div class="reservation-info">
+                <p><strong>Branch:</strong> <span id="modalBranch"></span></p>
+                <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                <p><strong>Time:</strong> <span id="modalTime"></span></p>
+            </div>
+            <div class="countdown-container">
+                <p class="countdown-text">Please wait <span id="countdown">3</span> seconds before confirming...</p>
+            </div>
+            <div class="modal-actions">
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" id="confirmDeleteBtn" class="btn-delete" disabled>Confirm Cancel</button>
+                </form>
+                <button type="button" class="btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let deleteReservationId = null;
+        let countdownInterval = null;
+        
+        function showDeleteConfirm(button) {
+            const reservationId = button.getAttribute('data-reservation-id');
+            const branch = button.getAttribute('data-branch');
+            const date = button.getAttribute('data-date');
+            const time = button.getAttribute('data-time');
+            
+            deleteReservationId = reservationId;
+            document.getElementById('modalBranch').textContent = branch;
+            document.getElementById('modalDate').textContent = date;
+            document.getElementById('modalTime').textContent = time;
+            document.getElementById('deleteForm').action = '/reservations/delete/' + reservationId;
+            
+            const modal = document.getElementById('deleteModal');
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            const countdownEl = document.getElementById('countdown');
+            
+            // Reset
+            confirmBtn.disabled = true;
+            let countdown = 3;
+            countdownEl.textContent = countdown;
+            
+            // Show modal
+            modal.style.display = 'flex';
+            
+            // Start countdown
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            countdownInterval = setInterval(() => {
+                countdown--;
+                countdownEl.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    confirmBtn.disabled = false;
+                    document.querySelector('.countdown-text').style.display = 'none';
+                }
+            }, 1000);
+        }
+        
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            modal.style.display = 'none';
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            document.getElementById('confirmDeleteBtn').disabled = true;
+            document.querySelector('.countdown-text').style.display = 'block';
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+    </script>
+</body>
+</html>
+

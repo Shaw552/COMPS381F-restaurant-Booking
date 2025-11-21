@@ -1,0 +1,26 @@
+node:events:491
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1468:16)
+    at listenInCluster (node:net:1516:12)
+    at Server.listen (node:net:1604:7)
+    at Function.listen (/Users/zhaoyihang/未命名文件夹/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/zhaoyihang/未命名文件夹/server.js:50:5)
+    at Module._compile (node:internal/modules/cjs/loader:1205:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1259:10)
+    at Module.load (node:internal/modules/cjs/loader:1068:32)
+    at Module._load (node:internal/modules/cjs/loader:909:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:82:12)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1495:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '::',
+  port: 3000
+}
+
+Node.js v19.1.0
