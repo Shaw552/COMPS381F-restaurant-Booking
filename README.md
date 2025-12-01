@@ -179,7 +179,7 @@ Retrieves reservations. Optional query parameters let you narrow the list for in
 
 **Example Usage:**
   ```bash
-  curl "http://localhost:3000/api/reservations?branch=Ho%20Man%20Tin%20Branch&date=2025-12-24&status=active"
+  curl https://comps381f-resturant-booking.onrender.com/api/reservations
   ```
 
 ### 3. Read Reservation (Single)
@@ -194,7 +194,7 @@ Fetches a single reservation document by its MongoDB identifier, including basic
 
 **Example Usage:**
   ```bash
-  curl http://localhost:3000/api/reservations/6761e6e95b0a4c001295b5c2
+  curl https://comps381f-resturant-booking.onrender.com/api/reservations/67ab3c9d8e7f6a5b4c3d2e1f
   ```
 
 ### 4. Update Reservation
@@ -217,12 +217,12 @@ Updates an existing reservation. You may send only the fields that need to chang
 
 **Example Usage:**
   ```bash
-  curl -X PUT http://localhost:3000/api/reservations/6761e6e95b0a4c001295b5c2 \
+  curl -X PUT https://comps381f-resturant-booking.onrender.com/api/reservations/67ab3c9d8e7f6a5b4c3d2e1f \
   -H "Content-Type: application/json" \
   -d '{
-    "time": "19:30",
-    "adults": 4,
-    "children": 2
+    "time": "20:00",
+    "adults": 5,
+    "status": "active"
   }'
   ```
 
@@ -238,5 +238,5 @@ Permanently removes a reservation document. Use this with caution—UI workflows
 
 **Example Usage:**
   ```bash
-  curl -X DELETE http://localhost:3000/api/reservations/6761e6e95b0a4c001295b5c2
+  curl -X DELETE https://comps381f-resturant-booking.onrender.com/api/reservations/67ab3c9d8e7f6a5b4c3d2e1f
   ```
